@@ -1,14 +1,32 @@
 # Terraform Multi-Region VPC
 
-This project creates:
-- VPC in ap-south-1 (Mumbai)
-- VPC in us-east-1 (Virginia)
-- Public & Private Subnets
-- Internet Gateway
-- Multi-region provider aliasing
+## Overview
+This project provisions **two AWS VPCs in different regions** using Terraform
+provider aliasing.
 
-## Usage
-terraform init
-terraform plan
-terraform apply
+## Regions
+- ap-south-1 (Mumbai)
+- us-east-1 (Virginia)
+
+## Resources Created
+- VPC
+- Public Subnet
+- Private Subnet
+- Internet Gateway
+
+## Terraform Concepts Used
+- Provider aliasing
+- Multi-region infrastructure
+- Modular file structure
+
+## How to Run
+terraform init  
+terraform plan  
+terraform apply  
+
+## Author
+Ayyapparaj
+
+
+
 
