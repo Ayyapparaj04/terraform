@@ -1,1 +1,105 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
+provider "aws" {
+  alias  = "mumbai"
+  region = "ap-south-1"
+}
+
+provider "aws" {
+  alias  = "virginia"
+  region = "us-east-1"
+}
+variable "mumbai_vpc_cidr" {
+  default = "10.0.0.0/16"
+}
+
+variable "virginia_vpc_cidr" {
+  default = "20.0.0.0/16"
+}
+resource "aws_vpc" "mumbai" {
+  provider   = aws.mumbai
+  cidr_block = var.mumbai_vpc_cidr
+
+  tags = {
+    Name = "Mumbai-VPC"
+  }
+}
+
+resource "aws_vpc" "virginia" {
+  provider   = aws.virginia
+  cidr_block = var.virginia_vpc_cidr
+
+  tags = {
+    Name = "Virginia-VPC"
+  }
+}
+# Mumbai Subnets
+resource "aws_subnet" "mumbai_public" {
+  provider          = aws.mumbai
+  vpc_id            = aws_vpc.mumbai.id
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "ap-south-1a"
+
+  tags = {
+    Name = "Mumbai-Public-Subnet"
+  }
+}
+
+resource "aws_subnet" "mumbai_private" {
+  provider          = aws.mumbai
+  vpc_id            = aws_vpc.mumbai.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "ap-south-1b"
+
+  tags = {
+    Name = "Mumbai-Private-Subnet"
+  }
+}
+
+# Virginia Subnets
+resource "aws_subnet" "virginia_public" {
+  provider          = aws.virginia
+  vpc_id            = aws_vpc.virginia.id
+  cidr_block        = "20.0.1.0/24"
+  availability_zone = "us-east-1a"
+
+  tags = {
+    Name = "Virginia-Public-Subnet"
+  }
+}
+
+resource "aws_subnet" "virginia_private" {
+  provider          = aws.virginia
+  vpc_id            = aws_vpc.virginia.id
+  cidr_block        = "20.0.2.0/24"
+  availability_zone = "us-east-1b"
+
+  tags = {
+    Name = "Virginia-Private-Subnet"
+  }
+}
+resource "aws_internet_gateway" "mumbai_igw" {
+  provider = aws.mumbai
+  vpc_id  = aws_vpc.mumbai.id
+
+  tags = {
+    Name = "Mumbai-IGW"
+  }
+}
+
+resource "aws_internet_gateway" "virginia_igw" {
+  provider = aws.virginia
+  vpc_id  = aws_vpc.virginia.id
+
+  tags = {
+    Name = "Virginia-IGW"
+  }
+}
 
